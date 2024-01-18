@@ -12,7 +12,7 @@ export class UserValidator {
       status: (arg0: number) => {
         (): any;
         new (): any;
-        json: { (arg0: { data: string }): any; new (): any };
+        json: { (arg0: { data: Joi.ValidationErrorItem[] }): any; new (): any };
       };
     },
     next: () => void
@@ -33,7 +33,7 @@ export class UserValidator {
 
     const { error } = schema.validate(body);
 
-    if (error) return res.status(400).json({ data: error.details[0].message });
+    if (error) return res.status(400).json({ data: error.details });
 
     body.password = await bcrypt.hash(body.password, 10);
 
@@ -52,7 +52,7 @@ export class UserValidator {
       status: (arg0: number) => {
         (): any;
         new (): any;
-        json: { (arg0: { data: string }): any; new (): any };
+        json: { (arg0: { data: Joi.ValidationErrorItem[] }): any; new (): any };
       };
     },
     next: () => void
@@ -73,7 +73,7 @@ export class UserValidator {
 
     const { error } = schema.validate(body);
 
-    if (error) return res.status(400).json({ data: error.details[0].message });
+    if (error) return res.status(400).json({ data: error.details });
 
     if (body.password) body.password = await bcrypt.hash(body.password, 10);
 

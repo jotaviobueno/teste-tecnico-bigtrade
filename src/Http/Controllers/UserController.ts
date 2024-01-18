@@ -1,7 +1,7 @@
 import { CreateUserDto, UpdateUserDto } from "../../Domain/Dtos";
 import UserService from "../Services/UserService";
 
-class UserController {
+export class UserController {
   async create(
     { createUserDto }: Request & { createUserDto: CreateUserDto },
     res: any
@@ -69,5 +69,3 @@ class UserController {
     }
   }
 }
-
-export default new UserController();

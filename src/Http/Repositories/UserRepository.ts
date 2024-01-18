@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { CreateUserDto, UpdateUserDto } from "../../Domain/Dtos";
 import { UserEntity } from "../../Domain/Entities";
-import { RepositoryFactory } from "../../Domain/factories";
+import { RepositoryFactory } from "../../Domain/Factories";
 
 export class UserRepository extends RepositoryFactory<
   UserEntity,

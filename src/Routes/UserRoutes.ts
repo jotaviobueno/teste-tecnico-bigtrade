@@ -1,22 +1,24 @@
 import { Router } from "express";
 import { UserValidator } from "../Domain/Validators";
-import UserController from "../Http/Controllers/UserController";
+import { UserController } from "../Http/Controllers/UserController";
 
 export const userRoutes = Router();
 
 const userValidator = new UserValidator();
-const userController = UserController;
+const userController = new UserController();
 
 userRoutes.post(
   "/",
-  (userValidator as any).create,
-  (userController as any).create
+  (req: any, res: any, next: () => void) =>
+    userValidator.create(req, res, next),
+  userController.create
 );
-userRoutes.get("/", (userController as any).findAll);
-userRoutes.get("/:userId", (userController as any).findById);
+userRoutes.get("/", userController.findAll);
+userRoutes.get("/:userId", userController.findById);
 userRoutes.patch(
   "/:userId",
-  (userValidator as any).update,
-  (userController as any).update
+  (req: any, res: any, next: () => void) =>
+    userValidator.update(req, res, next),
+  userController.update
 );
-userRoutes.delete("/:userId", (userController as any).update);
+userRoutes.delete("/:userId", userController.update);
