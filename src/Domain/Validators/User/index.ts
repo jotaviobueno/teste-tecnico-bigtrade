@@ -22,6 +22,7 @@ export class UserValidator {
       username: req.body?.username,
       email: req.body?.email,
       password: req.body?.password,
+      file: (req as any)?.files?.file,
     };
 
     const schema = Joi.object({
@@ -29,6 +30,7 @@ export class UserValidator {
       username: Joi.string().min(2).max(55).required(),
       email: Joi.string().email().required(),
       password: Joi.string().min(6).required(),
+      file: Joi.any().optional(),
     });
 
     const { error } = schema.validate(body);
@@ -62,6 +64,7 @@ export class UserValidator {
       username: req.body?.username,
       email: req.body?.email,
       password: req.body?.password,
+      file: (req as any)?.files?.file,
     };
 
     const schema = Joi.object({
@@ -69,6 +72,7 @@ export class UserValidator {
       username: Joi.string().min(2).max(55).optional(),
       email: Joi.string().email().optional(),
       password: Joi.string().min(6).optional(),
+      file: Joi.any().optional(),
     });
 
     const { error } = schema.validate(body);

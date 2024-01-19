@@ -20,8 +20,8 @@ export class PostValidator {
     const body = {
       title: req.body?.title,
       content: req.body?.content,
-      images: req.body?.images,
       user_id: req.body?.user_id,
+      files: (req as any)?.files?.files,
     };
 
     const schema = Joi.object({
@@ -30,7 +30,7 @@ export class PostValidator {
       user_id: Joi.string()
         .regex(/^[0-9a-fA-F]{24}$/)
         .required(),
-      images: Joi.array().items(Joi.string()).optional(),
+      files: Joi.any().optional(),
     });
 
     const { error } = schema.validate(body);
@@ -60,8 +60,8 @@ export class PostValidator {
     const body = {
       title: req.body?.title,
       content: req.body?.content,
-      images: req.body?.images,
       user_id: req.body?.user_id,
+      files: (req as any)?.files?.files,
     };
 
     const schema = Joi.object({
@@ -70,7 +70,7 @@ export class PostValidator {
       user_id: Joi.string()
         .regex(/^[0-9a-fA-F]{24}$/)
         .optional(),
-      images: Joi.array().items(Joi.string()),
+      files: Joi.any().optional(),
     });
 
     const { error } = schema.validate(body);

@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 import { ServiceContract } from "../../Domain/Contracts";
 import { CreateUserDto, UpdateUserDto } from "../../Domain/Dtos";
-import { UserEntity } from "../../Domain/Entities";
+import { File, UserEntity } from "../../Domain/Entities";
 import { HttpException, isMongoId } from "../../Domain/Utils";
 import { UserModel } from "../../Models";
 import { UserRepository } from "../Repositories/UserRepository";
+import S3Service from "./S3Service";
 
 class UserService
   implements
@@ -19,7 +20,10 @@ class UserService
     this.userRepository = new UserRepository(UserModel);
   }
 
-  async create(dto: CreateUserDto): Promise<Omit<UserEntity, "password">> {
+  async create({
+    file,
+    ...dto
+  }: CreateUserDto & { file?: File }): Promise<Omit<UserEntity, "password">> {
     const emailAlreadyExist = await this.userRepository.findByEmail(dto.email);
 
     if (emailAlreadyExist)
@@ -32,7 +36,10 @@ class UserService
     if (usernameAlreadyExist)
       throw new HttpException("Email or username already exist", 409);
 
-    const user = await this.userRepository.create({ ...dto });
+    const avatar =
+      file && (await S3Service.uploadSingleFile({ file, path: "user/avatar" }));
+
+    const user = await this.userRepository.create({ ...dto, avatar });
 
     return user;
   }
@@ -54,11 +61,13 @@ class UserService
     return user;
   }
 
-  async update(
-    dto: UpdateUserDto & { id: string } & {
-      id: string | mongoose.Types.ObjectId;
-    }
-  ): Promise<Omit<UserEntity, "password">> {
+  async update({
+    file,
+    ...dto
+  }: UpdateUserDto & { id: string } & {
+    id: string | mongoose.Types.ObjectId;
+    file?: File;
+  }): Promise<Omit<UserEntity, "password">> {
     const user = await this.findById(dto.id);
 
     if (dto.email) {
@@ -79,7 +88,14 @@ class UserService
         throw new HttpException("Email or username already exist", 409);
     }
 
-    const update = await this.userRepository.update({ _id: user._id, ...dto });
+    const avatar =
+      file && (await S3Service.uploadSingleFile({ file, path: "user/avatar" }));
+
+    const update = await this.userRepository.update({
+      ...dto,
+      _id: user._id,
+      avatar,
+    });
 
     if (!update.modifiedCount)
       throw new HttpException("Failed to updaate", 406);
