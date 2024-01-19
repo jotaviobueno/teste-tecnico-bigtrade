@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 export interface UserEntity {
-  _id: mongoose.ObjectId;
+  _id: mongoose.Types.ObjectId;
   name: string;
   email: string;
   avatar: string;

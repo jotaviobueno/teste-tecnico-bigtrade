@@ -11,6 +11,7 @@ export class UserController {
 
       return res.status(201).json(data);
     } catch (e: any) {
+      console.log(e);
       return res.status(e.code).json({ error: e.message });
     }
   }
@@ -44,7 +45,10 @@ export class UserController {
       const userId = req.params.userId;
       const updateUserDto = req.updateUserDto;
 
-      const data = await UserService.update({ id: userId, ...updateUserDto });
+      const data = await UserService.update({
+        id: userId,
+        ...updateUserDto,
+      });
 
       return res.status(200).json(data);
     } catch (e: any) {

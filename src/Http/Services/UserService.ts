@@ -42,7 +42,7 @@ class UserService
   }
 
   async findById(
-    id: string | mongoose.ObjectId
+    id: string | mongoose.Types.ObjectId
   ): Promise<Omit<UserEntity, "password">> {
     if (!isMongoId(id.toString()))
       throw new HttpException("Id sent is not objectId", 400);
@@ -56,7 +56,7 @@ class UserService
 
   async update(
     dto: UpdateUserDto & { id: string } & {
-      id: string | mongoose.Schema.Types.ObjectId;
+      id: string | mongoose.Types.ObjectId;
     }
   ): Promise<Omit<UserEntity, "password">> {
     const user = await this.findById(dto.id);
@@ -92,7 +92,7 @@ class UserService
 
     const remove = await this.userRepository.softDelete(user._id);
 
-    if (!remove) throw new HttpException("Failed to remove", 406);
+    if (!remove.modifiedCount) throw new HttpException("Failed to remove", 406);
 
     return true;
   }

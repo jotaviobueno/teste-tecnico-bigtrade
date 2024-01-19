@@ -7,11 +7,14 @@ export class RepositoryFactory<Entity, CreateDto = void, UpdateDto = void> {
     return this.model.create<Entity>({ ...data });
   }
 
-  update({ _id, ...data }: UpdateDto & { _id?: string | mongoose.ObjectId }) {
+  update({
+    _id,
+    ...data
+  }: UpdateDto & { _id?: string | mongoose.Types.ObjectId }) {
     return this.model.updateOne({ _id }, { ...data, updated_at: new Date() });
   }
 
-  softDelete(_id: string | mongoose.ObjectId) {
+  softDelete(_id: string | mongoose.Types.ObjectId) {
     return this.model.updateOne(
       { _id },
       { updated_at: new Date(), deleted_at: new Date() }

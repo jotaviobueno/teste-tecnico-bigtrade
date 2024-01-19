@@ -6,7 +6,7 @@ import { RepositoryFactory } from "../../Domain/Factories";
 export class UserRepository extends RepositoryFactory<
   UserEntity,
   CreateUserDto,
-  UpdateUserDto & { _id: string | mongoose.ObjectId }
+  UpdateUserDto & { _id: string | mongoose.Types.ObjectId }
 > {
   findByEmail(email: string): Promise<UserEntity | null> {
     return this.model.findOne<UserEntity>({ email, deleted_at: null });
@@ -16,7 +16,7 @@ export class UserRepository extends RepositoryFactory<
     return this.model.findOne<UserEntity>({ username, deleted_at: null });
   }
 
-  findById(_id: string | mongoose.ObjectId): Promise<UserEntity | null> {
+  findById(_id: string | mongoose.Types.ObjectId): Promise<UserEntity | null> {
     return this.model.findOne<UserEntity>({ _id, deleted_at: null });
   }
 
